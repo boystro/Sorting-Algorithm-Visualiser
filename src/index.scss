@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgb(0, 119, 255);
+    background: radial-gradient(ellipse at bottom left, rgba(175, 2, 255, 0.897), transparent),
+                radial-gradient(circle at top right, rgba(0, 132, 255, 0.555), transparent),
+                radial-gradient(ellipse at top left, rgb(0, 255, 200) 50%, transparent),
+                radial-gradient(circle at bottom right, rgba(54, 54, 54, 0.507), transparent); 
+    background-size: cover;
+
+    overflow: hidden;
+}

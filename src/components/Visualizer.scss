@@ -1,0 +1,168 @@
+@import "ref";
+
+.visualizer {
+    position: relative;
+    height: 70vh;
+    margin: 1rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.667);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+
+    .wrapper {
+        display: flex;
+        width: 95%;
+        margin: 0.5rem auto;
+        align-items: flex-end;
+    }
+}
+
+.number-repr-bar {
+    min-width: 1px;
+    flex: 1;
+    height: 0;
+    // border-radius: 3px 3px 0 0;
+    border-radius: 3px ;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-left: 1px;
+    margin-right: 1px;
+    transition: 100ms ease background-color;
+
+    &.active {
+        background-color: white;
+        transition: 0ms ease background-color;
+    }
+}
+
+.ar-ct {
+    position: absolute;
+    margin: 0.5em;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: calc(100% - 1em);
+    clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+    transition: 300ms ease clip-path;
+    font-size: 64px;
+    font-family: $font2;
+    color: rgba(255, 255, 255, 0.233);
+    
+    &.deactivated {
+        clip-path: polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%);
+    }
+}
+
+.controls {
+    position: absolute;
+    margin: 0.5em;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: calc(100% - 1em);
+    clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+    transition: 300ms ease clip-path;
+    
+    &.deactivated {
+        clip-path: polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%);
+    }
+}
+
+.algorithm-selector {
+    width: max-content;
+    flex: 1;
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.329);
+}
+
+.selector-list {
+    margin: 0.1em;
+    padding: 0.4em 0.8em;
+    font-family: $font;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 16px;
+    color: white;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        background-color: white;
+        width: 0%;
+        height: 1px;
+        transition: 150ms ease-in-out left,
+                    150ms ease-in-out width; 
+    }
+
+    &:hover::after {
+        left: 0;
+        width: 100%;
+    }
+}
+
+button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    font-family: $font;
+    transition: 300ms ease color;
+
+    &:disabled {
+        pointer-events: none;
+    }
+}
+
+.reset {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid white;
+    backdrop-filter: blur(3px);
+    margin: 0 0em 0 0.25em;
+    border-radius: 10px;
+    letter-spacing: 0.1em;
+    font-size: 18px;
+    transition: 100ms ease background-color;
+
+    &:hover {
+        background-color: rgba(98, 0, 255, 0.333);
+    }
+}
+
+.array-counter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    border: 1px solid white;   
+    margin: 0 0.25em;
+}
+
+.array-count-val {
+    width: 40px;
+    text-align: center;
+    font-family: $font;
+    font-size: 18px;
+    color: white;
+    cursor: default;
+    border-left: 1px solid white;
+    border-right: 1px solid white;;
+}
+
+.iteration-speed {
+    width: 70px;
+    border: 1px solid white;
+    letter-spacing: 0.1em;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 0.25em;
+}
