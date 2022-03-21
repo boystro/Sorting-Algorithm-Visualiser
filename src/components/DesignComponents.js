@@ -24,7 +24,7 @@ export default function DesignComponents() {
       };
     }
     return arr.map((value, idx) => {
-      return <div className="circle" style={value}></div>;
+      return <div className="circle" key={idx} style={value}></div>;
     });
   }
 

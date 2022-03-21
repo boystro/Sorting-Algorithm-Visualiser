@@ -65,7 +65,7 @@
     transition: 300ms ease clip-path;
     
     &.deactivated {
-        clip-path: polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%);
+        clip-path: polygon(0% 0%, 0% 0%, 100% 0%, 100% 0%);
     }
 }
 

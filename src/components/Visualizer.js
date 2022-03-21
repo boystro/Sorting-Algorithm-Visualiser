@@ -6,7 +6,8 @@ export default function Visualizer() {
   const MIN = 10;
   const MAX = 400;
   
-  const [FastIter, setFastIter] = useState(true)
+  const [SortMethod, setSortMethod] = useState("");
+  const [FastIter, setFastIter] = useState(true);
   const [Count, setCount] = useState(50);
   const [Values, setValues] = useState([]);
   const [IsStateChanging, setIsStateChanging] = useState([]);
@@ -42,6 +43,7 @@ export default function Visualizer() {
   }
 
   async function BubbleSort() {
+    setSortMethod("Bubble Sort");
     setIsSorting(true);
     let temp = 0;
     let len = Values.length;
@@ -67,6 +69,7 @@ export default function Visualizer() {
   }
 
   async function SelectionSort() {
+    setSortMethod("Selection Sort");
     setIsSorting(true);
     let temp = 0;
     let len = Values.length;
@@ -93,6 +96,7 @@ export default function Visualizer() {
   }
 
   async function InsertionSort() {
+    setSortMethod("Insertion Sort");
     setIsSorting(true);
     let temp = 0;
     let len = Values.length;
@@ -123,6 +127,7 @@ export default function Visualizer() {
   }
 
   async function QuickSort() {
+    setSortMethod("Quick Sort");
     setIsSorting(true);
     let loopControl = FastIter ? 1 : 250;
     async function swap(i, j) {
@@ -164,6 +169,7 @@ export default function Visualizer() {
   }
 
   async function MergeSort() {
+    setSortMethod("Merge Sort");
     setIsSorting(true);
     let loopControl = FastIter ? 1 : 250;
 
@@ -261,6 +267,7 @@ export default function Visualizer() {
   }
 
   async function CountingSort() {
+    setSortMethod("Counting Sort");
     setIsSorting(true);
     let loopControl = FastIter ? 1 : 250;
     async function countSort()
@@ -310,15 +317,106 @@ export default function Visualizer() {
     setIsSorting(false);
   }
 
-  async function BucketSort() {
+  async function DoubleSelectionSort() {
+    setSortMethod("Double Selection Sort");
+    setIsSorting(true);
+    let len = Values.length;
+    let loopControl = FastIter ? 1 : 250;
+    let hasChanged = false;
+    let temp, minIter, maxIter;
+    for (let i = 0; i < Math.floor(len/3); i++) {
+      temp=0;
+      minIter=i;
+      maxIter=Values.length - i - 2;
+      while (minIter < len-i) {
 
+        hasChanged = false;
+        if (Values[maxIter] > Values[maxIter+1]) {
+          hasChanged = true;
+          IsStateChanging[maxIter] = true;
+          IsStateChanging[maxIter+1] = true;
+          setIsStateChanging([...IsStateChanging]);
+
+          temp = Values[maxIter];
+          Values[maxIter] = Values[maxIter + 1];
+          Values[maxIter + 1] = temp;
+        }
+
+        if (Values[minIter-1] > Values[minIter]) {
+          hasChanged = true;
+          IsStateChanging[minIter] = true;
+          IsStateChanging[minIter+1] = true;
+          setIsStateChanging([...IsStateChanging]);
+
+          temp = Values[minIter];
+          Values[minIter] = Values[minIter - 1];
+          Values[minIter - 1] = temp;
+        }
+        if (hasChanged) {
+          await sleep(loopControl);
+          IsStateChanging[maxIter] = false;
+          IsStateChanging[maxIter+1] = false;
+          IsStateChanging[minIter] = false;
+          IsStateChanging[minIter+1] = false;
+          setIsStateChanging([...IsStateChanging]);
+        }
+
+        minIter++;
+        maxIter--;
+      }      
+
+    }
+    setValues([...Values]);
+    setIsSorting(false);
   }
+  
 
   async function HeapSort() {
+    var array_length;
+    let loopControl = FastIter ? 1 : 250;
+    async function heap_root(i) {
+      var left = 2 * i + 1;
+      var right = 2 * i + 2;
+      var max = i;
+      if (left < array_length && Values[left] > Values[max]) max = left;
+      if (right < array_length && Values[right] > Values[max]) max = right;
+      if (max != i) {
+        await swap(i, max);
+        await heap_root(max);
+      }
+    }
+    async function swap(index_A, index_B) {
+      IsStateChanging[index_A] = true;
+      IsStateChanging[index_B] = true;
+      setIsStateChanging([...IsStateChanging]);
 
+      var temp = Values[index_A];
+      Values[index_A] = Values[index_B];
+      Values[index_B] = temp;
+      setValues([...Values]);
+
+      await sleep(loopControl);
+      IsStateChanging[index_A] = false;
+      IsStateChanging[index_B] = false;
+      setIsStateChanging([...IsStateChanging]);
+    }
+    async function heapSort() {
+      array_length = Values.length;
+      for (var i = Math.floor(array_length / 2); i >= 0; i -= 1) {
+        await heap_root(i);
+      }
+      for (i = Values.length - 1; i > 0; i--) {
+        await swap(0, i);
+        array_length--;
+        await heap_root(0);   
+      }
+    }
+    
+    await heapSort(Values);
   }
 
   async function RadixSort() {
+    setSortMethod("Radix Sort");
     setIsSorting(true);
     let loopControl = FastIter ? 1 : 250;
     function getMax()
@@ -383,18 +481,18 @@ export default function Visualizer() {
               );
             })}
         </div>
-        <span className={IsSorting?'ar-ct':'ar-ct deactivated'}>{Count} Elements</span>
+        <span className={IsSorting?'ar-ct':'ar-ct deactivated'}>{SortMethod}ing {Count} Elements</span>
         <div className={IsSorting?'controls deactivated':'controls'}>
             
             <div className='algorithm-selector'>
 
               <button className='selector-list' onClick={() => BubbleSort()} disabled={IsSorting}>Bubble Sort</button>
               <button className='selector-list' onClick={() => SelectionSort()} disabled={IsSorting}>Selection Sort</button>
+              <button className='selector-list' onClick={() => DoubleSelectionSort()} disabled={IsSorting}>Double Selection Sort</button>
               <button className='selector-list' onClick={() => InsertionSort()} disabled={IsSorting}>Insertion Sort</button>
               <button className='selector-list' onClick={() => QuickSort()} disabled={IsSorting}>Quick Sort</button>
               <button className='selector-list' onClick={() => MergeSort()} disabled={IsSorting}>Merge Sort</button>
               <button className='selector-list' onClick={() => CountingSort()} disabled={IsSorting}>Counting Sort</button>
-              <button className='selector-list' onClick={() => BucketSort()} disabled={IsSorting}>Bucket Sort</button>
               <button className='selector-list' onClick={() => HeapSort()} disabled={IsSorting}>Heap Sort</button>
               <button className='selector-list' onClick={() => RadixSort()} disabled={IsSorting}>Radix Sort</button>
 
