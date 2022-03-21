@@ -73,20 +73,20 @@ export default function Visualizer() {
     let loopControl = FastIter ? 1 : 250;
     for (let i = 0; i < len; i++) {
       for (let j = i; j < len; j++) {
-        IsStateChanging[i] = true;
-        IsStateChanging[j] = true;
-        setIsStateChanging([...IsStateChanging]);
         if (Values[i] > Values[j]) {
+          IsStateChanging[i] = true;
+          IsStateChanging[j] = true;
+          setIsStateChanging([...IsStateChanging]);
           temp = Values[j];
           Values[j] = Values[i];
           Values[i] = temp;
           setValues([...Values]);
-          
+          await sleep(loopControl);
+          IsStateChanging[i] = false;
+          IsStateChanging[j] = false;
+          setIsStateChanging([...IsStateChanging]);
         }
-        await sleep(loopControl);
-        IsStateChanging[i] = false;
-        IsStateChanging[j] = false;
-        setIsStateChanging([...IsStateChanging]);
+          
       }
     }
     setIsSorting(false);
@@ -164,11 +164,150 @@ export default function Visualizer() {
   }
 
   async function MergeSort() {
+    setIsSorting(true);
+    let loopControl = FastIter ? 1 : 250;
 
+    async function merge(l, m, r) {
+        var n1 = m - l + 1;
+        var n2 = r - m;
+      
+        var L = new Array(n1); 
+        var R = new Array(n2);
+      
+        IsStateChanging[l] = true;
+        IsStateChanging[m] = true;
+        setIsStateChanging([...IsStateChanging]);
+
+        for (var i = 0; i < n1; i++) {
+          L[i] = Values[l + i];
+        }
+            
+        for (var j = 0; j < n2; j++) {
+          R[j] = Values[m + 1 + j];
+        }
+            
+        IsStateChanging[l] = false;
+        IsStateChanging[m] = false;
+        setIsStateChanging([...IsStateChanging]);
+
+        var i = 0;
+        var j = 0;
+        var k = l;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                IsStateChanging[k] = true;
+                setIsStateChanging([...IsStateChanging]);
+
+                Values[k] = L[i];
+                setValues([...Values]);
+
+                await sleep(loopControl);
+                IsStateChanging[k] = false;
+                setIsStateChanging([...IsStateChanging]);
+                i++;
+            }
+            else {
+                IsStateChanging[k] = true;
+                setIsStateChanging([...IsStateChanging]);
+
+                Values[k] = R[j];
+                setValues([...Values]);
+
+                await sleep(loopControl);
+                IsStateChanging[k] = false;
+                setIsStateChanging([...IsStateChanging]);
+                j++;
+            }
+            k++;
+        }
+        while (i < n1) {
+            IsStateChanging[k] = true;
+            setIsStateChanging([...IsStateChanging]);
+
+            Values[k] = L[i];
+            
+            await sleep(loopControl);
+            IsStateChanging[k] = false;
+            setIsStateChanging([...IsStateChanging]);
+
+            i++;
+            k++;
+        }
+        while (j < n2) {
+          IsStateChanging[k] = true;
+          setIsStateChanging([...IsStateChanging]);
+
+          Values[k] = R[j];
+          setValues([...Values]);
+
+          await sleep(loopControl);
+          IsStateChanging[k] = false;
+          setIsStateChanging([...IsStateChanging]);
+          j++;
+          k++;
+        }
+    }
+    async function mergeSort(l, r){
+        if(l>=r){
+            return;
+        }
+        var m = l + parseInt(( r - l ) / 2);
+        await mergeSort(l,m);
+        await mergeSort(m+1,r);
+        await merge(l,m,r);
+    }
+    await mergeSort(0, Values.length-1);
+    setIsSorting(false);
   }
 
   async function CountingSort() {
+    setIsSorting(true);
+    let loopControl = FastIter ? 1 : 250;
+    async function countSort()
+    {
+      var max = Math.max.apply(Math, Values);
+      var min = Math.min.apply(Math, Values);
+      var range = max - min + 1;
+      var count = Array.from({length: range}, (_, i) => 0);
+      var output = Array.from({length: Values.length}, (_, i) => 0);
+      for (let i = 0; i < Values.length; i++) {
+          IsStateChanging[i] = true;
+          setIsStateChanging([...IsStateChanging]);
+          
+          count[Values[i] - min]++;
+          
+          await sleep(loopControl);
+          IsStateChanging[i] = false;
+          setIsStateChanging([...IsStateChanging]);
+      }
+      for (let i = 1; i < count.length; i++) {
+          count[i] += count[i - 1];
+      }
+      for (let i = Values.length - 1; i >= 0; i--) {
+          IsStateChanging[i] = true;
+          setIsStateChanging([...IsStateChanging]);
 
+          output[count[Values[i] - min] - 1] = Values[i];
+          count[Values[i] - min]--;
+
+          await sleep(loopControl);
+          IsStateChanging[i] = false;
+          setIsStateChanging([...IsStateChanging]);
+      }
+      for (let i = 0; i < Values.length; i++) {
+          IsStateChanging[i] = true;
+          setIsStateChanging([...IsStateChanging]);
+
+          Values[i] = output[i];
+          setValues([...Values]);
+
+          await sleep(loopControl);
+          IsStateChanging[i] = false;
+          setIsStateChanging([...IsStateChanging]);
+      }
+    }
+    await countSort();
+    setIsSorting(false);
   }
 
   async function BucketSort() {
