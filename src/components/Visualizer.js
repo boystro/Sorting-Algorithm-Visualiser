@@ -370,8 +370,9 @@ export default function Visualizer() {
     setIsSorting(false);
   }
   
-
   async function HeapSort() {
+    setSortMethod("Heap Sort");
+    setIsSorting(true);
     var array_length;
     let loopControl = FastIter ? 1 : 250;
     async function heap_root(i) {
@@ -411,8 +412,8 @@ export default function Visualizer() {
         await heap_root(0);   
       }
     }
-    
     await heapSort(Values);
+    setIsSorting(false);
   }
 
   async function RadixSort() {
