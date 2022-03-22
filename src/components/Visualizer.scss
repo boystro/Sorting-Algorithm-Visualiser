@@ -164,3 +164,28 @@ button {
     background: rgba(255, 255, 255, 0.1);
     margin: 0 0.25em;
 }
+
+.on-mobile-note {
+    text-align: center;
+    font-size: 18px;
+    font-family: $font;
+    color: white;
+    display: none;
+}
+
+@media screen and (max-width: 1200px) {
+    .visualizer {
+        height: 50vh;
+        justify-content: center;
+        align-items: center;
+        .wrapper, .controls {
+            justify-content: space-around;
+            * {
+                display: none;
+            }
+        }
+        .on-mobile-note {
+            display: block;
+        }
+    }
+}

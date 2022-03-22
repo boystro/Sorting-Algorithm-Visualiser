@@ -475,6 +475,7 @@ export default function Visualizer() {
   return (
     <div className='visualizer'>
         <div className='wrapper'>
+          <div className='on-mobile-note'>Please Use a Widescren Desktop to load everything properly.</div>
           {Values.map((value, idx) => {
               return (
                 <div className={IsStateChanging[idx] ? 'number-repr-bar active' : 'number-repr-bar'} key={idx} style={{height : value}}></div>
